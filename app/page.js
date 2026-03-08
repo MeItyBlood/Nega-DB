@@ -64,7 +64,7 @@ function SongCard({ song, darkMode }) {
               setLoaded(false);
             }}
             style={{
-              fontSize: "10px",
+              fontSize: "11px",
               padding: "2px 5px",
               borderRadius: "10px",
               border: "none",
