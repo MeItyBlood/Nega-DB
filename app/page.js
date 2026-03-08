@@ -58,7 +58,7 @@ function SongCard({ song, darkMode }) {
           textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
         }}
       >
-        アーティスト: {song.artist}
+        {song.artist}
       </p>
 
       <div
@@ -77,8 +77,8 @@ function SongCard({ song, darkMode }) {
               setLoaded(false);
             }}
             style={{
-              fontSize: "10px",
-              padding: "3px 6px",
+              fontSize: "8px",
+              padding: "2px 5px",
               borderRadius: "10px",
               border: "none",
               cursor: "pointer",
