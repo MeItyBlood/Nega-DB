@@ -189,6 +189,7 @@ export default function Home() {
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
   const [cols, setCols] = useState(3);
+  const [jumpPage, setJumpPage] = useState("");
 
   const PAGE_SIZE = 30;
 
@@ -258,7 +259,11 @@ export default function Home() {
   });
 
   const filtered = groupedSongs
-    .filter((s) => s.title.includes(search) || s.artist.includes(search))
+    .filter(
+      (s) =>
+        s.title.toLowerCase().includes(search.toLowerCase()) ||
+        s.artist.toLowerCase().includes(search.toLowerCase())
+    )
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -356,7 +361,7 @@ export default function Home() {
               color: "#d946ef",
               textDecoration: "none",
               fontWeight: "bold",
-              fontSize: "14px", 
+              fontSize: "12px",
             }}
           >
             このサイトについて
@@ -385,6 +390,7 @@ export default function Home() {
           alignItems: "center",
           gap: "16px",
           marginTop: "24px",
+          flexWrap: "wrap",
         }}
       >
         <button
@@ -417,6 +423,38 @@ export default function Home() {
           }}
         >
           次のページ
+        </button>
+        <input
+          type="number"
+          min={1}
+          max={totalPages}
+          value={jumpPage}
+          onChange={(e) => setJumpPage(e.target.value)}
+          placeholder="ページ番号"
+          style={{
+            width: "60px",
+            padding: "6px 8px",
+            borderRadius: "8px",
+            border: "2px solid #fff",
+            textAlign: "center",
+          }}
+        />
+        <button
+          onClick={() => {
+            const num = parseInt(jumpPage);
+            if (!isNaN(num) && num >= 1 && num <= totalPages) setPage(num);
+            setJumpPage("");
+          }}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "12px",
+            border: "none",
+            backgroundColor: "#fff",
+            color: "#d946ef",
+            cursor: "pointer",
+          }}
+        >
+          移動
         </button>
       </div>
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
