@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
@@ -13,136 +13,171 @@ function SongCard({ song, darkMode }) {
     : "";
 
   return (
-    <div
-      style={{
-        position: "relative",
-        padding: "10px",
-        borderRadius: "16px",
-        backgroundColor: darkMode
-          ? "rgba(91,33,182,0.6)"
-          : "rgba(255,255,255,0.6)",
-        color: darkMode ? "#fff" : "#6b21a8",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-        backdropFilter: "blur(12px)",
-        overflow: "hidden",
-        fontSize: "12px",
-      }}
-    >
-      <img
-        src="/kyomu1.png"
-        alt="icon"
-        style={{
-          position: "absolute",
-          top: "6px",
-          right: "6px",
-          width: "16px",
-          height: "16px",
-        }}
-      />
-
-      <h2
-        style={{
-          fontSize: "14px",
-          fontWeight: "bold",
-          marginBottom: "2px",
-          textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-          lineHeight: "1.2",
-        }}
-      >
-        {song.title}
-      </h2>
-
-      <p
-        style={{
-          fontSize: "11px",
-          margin: "2px 0",
-          textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-        }}
-      >
-        {song.artist}
-      </p>
-
+    <>
       <div
         style={{
-          marginTop: "6px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "4px",
+          position: "relative",
+          padding: "10px",
+          borderRadius: "16px",
+          backgroundColor: darkMode
+            ? "rgba(91,33,182,0.6)"
+            : "rgba(255,255,255,0.6)",
+          color: darkMode ? "#fff" : "#6b21a8",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+          backdropFilter: "blur(12px)",
+          overflow: "hidden",
+          fontSize: "12px",
         }}
       >
-        {occurrences.map((o, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setSelectedIndex(i);
-              setLoaded(false);
-            }}
+        <img
+          src="/kyomu1.png"
+          alt="icon"
+          style={{
+            position: "absolute",
+            top: "6px",
+            right: "6px",
+            width: "16px",
+            height: "16px",
+          }}
+        />
+        <h2
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+            marginBottom: "2px",
+            textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+            lineHeight: "1.2",
+          }}
+        >
+          {song.title}
+        </h2>
+        <p
+          style={{
+            fontSize: "11px",
+            margin: "2px 0",
+            textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+          }}
+        >
+          {song.artist}
+        </p>
+        <div
+          style={{
+            marginTop: "6px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "4px",
+          }}
+        >
+          {occurrences.map((o, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedIndex(i)}
+              style={{
+                fontSize: "11px",
+                padding: "2px 5px",
+                borderRadius: "10px",
+                border: "none",
+                cursor: "pointer",
+                backgroundColor:
+                  i === selectedIndex
+                    ? "#facc15"
+                    : darkMode
+                    ? "#a78bfa"
+                    : "#fbcfe8",
+                color: "#111",
+              }}
+            >
+              {o.date}
+            </button>
+          ))}
+        </div>
+        {selected.videoId && (
+          <div
+            onClick={() => setShowModal(true)}
             style={{
-              fontSize: "12px",
-              padding: "2px 5px",
-              borderRadius: "10px",
-              border: "none",
+              marginTop: "8px",
               cursor: "pointer",
-              backgroundColor:
-                i === selectedIndex
-                  ? "#facc15"
-                  : darkMode
-                  ? "#a78bfa"
-                  : "#fbcfe8",
-              color: "#111",
+              position: "relative",
             }}
           >
-            {o.date}
-          </button>
-        ))}
-      </div>
-
-      <div style={{ marginTop: "8px" }}>
-        {selected.videoId &&
-          (!loaded ? (
+            <img
+              src={thumbnail}
+              alt="thumbnail"
+              style={{ width: "100%", borderRadius: "10px" }}
+            />
             <div
-              onClick={() => setLoaded(true)}
-              style={{ cursor: "pointer", position: "relative" }}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "26px",
+                color: "#fff",
+              }}
             >
-              <img
-                src={thumbnail}
-                alt="thumbnail"
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "26px",
-                  color: "#fff",
-                }}
-              >
-                ▶
-              </div>
+              ▶
             </div>
-          ) : (
-            <div style={{ position: "relative", width: "100%", paddingTop: "56.25%" }}>
-              <iframe
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "10px",
-                }}
-                src={`https://www.youtube.com/embed/${selected.videoId}?start=${
-                  selected.start || 0
-                }&autoplay=1`}
-                title={song.title || "動画"}
-                allowFullScreen
-              />
-            </div>
-          ))}
+          </div>
+        )}
       </div>
-    </div>
+      {showModal && (
+        <div
+          onClick={() => setShowModal(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "90%",
+              maxWidth: "600px",
+              aspectRatio: "16/9",
+              borderRadius: "12px",
+              overflow: "hidden",
+              backgroundColor: "#000",
+              position: "relative",
+            }}
+          >
+            <iframe
+              src={`https://www.youtube.com/embed/${selected.videoId}?start=${
+                selected.start || 0
+              }&autoplay=1`}
+              style={{ width: "100%", height: "100%", border: "none" }}
+              allowFullScreen
+              title={song.title || "動画"}
+            />
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                position: "absolute",
+                top: "8px",
+                right: "8px",
+                background: "rgba(255,255,255,0.8)",
+                border: "none",
+                borderRadius: "50%",
+                width: "28px",
+                height: "28px",
+                fontWeight: "bold",
+                fontSize: "18px",
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -153,7 +188,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [cols, setCols] = useState(2);
+  const [cols, setCols] = useState(3);
 
   const PAGE_SIZE = 30;
 
@@ -257,9 +292,8 @@ export default function Home() {
             textShadow: "3px 3px 6px rgba(0,0,0,0.3)",
           }}
         >
-          ♄ ネガちデータベース
+          ♄ネガちデータベース
         </h1>
-
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
             type="text"
@@ -274,7 +308,6 @@ export default function Home() {
               width: "200px",
             }}
           />
-
           <button
             onClick={() => setSortAZ(!sortAZ)}
             style={{
@@ -288,7 +321,6 @@ export default function Home() {
           >
             {sortAZ ? "五十音順解除" : "五十音順"}
           </button>
-
           <button
             onClick={() => setDateDesc(!dateDesc)}
             style={{
@@ -302,7 +334,6 @@ export default function Home() {
           >
             {dateDesc ? "日付：新→旧" : "日付：旧→新"}
           </button>
-
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{
@@ -316,7 +347,6 @@ export default function Home() {
           >
             {darkMode ? "ライト" : "ダーク"}
           </button>
-
           <a
             href="/about"
             style={{
@@ -332,7 +362,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
       <div
         style={{
           display: "grid",
@@ -348,7 +377,6 @@ export default function Home() {
           />
         ))}
       </div>
-
       <div
         style={{
           display: "flex",
@@ -372,11 +400,9 @@ export default function Home() {
         >
           前のページ
         </button>
-
         <span style={{ color: "#fff" }}>
           {page} / {totalPages}
         </span>
-
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -392,7 +418,6 @@ export default function Home() {
           次のページ
         </button>
       </div>
-
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
