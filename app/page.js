@@ -30,7 +30,6 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
-          height: "220px",
         }}
       >
         <img
@@ -44,35 +43,60 @@ function SongCard({ song, darkMode }) {
             height: "16px",
           }}
         />
-        <div>
-          <h2
+        <h2
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+            marginBottom: "2px",
+            textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+            lineHeight: "1.2",
+          }}
+        >
+          {song.title}
+        </h2>
+        <p
+          style={{
+            fontSize: "11px",
+            margin: "2px 0",
+            textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+          }}
+        >
+          {song.artist}
+        </p>
+        {selected.videoId && (
+          <div
+            onClick={() => setShowModal(true)}
             style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "2px",
-              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-              lineHeight: "1.2",
+              marginTop: "8px",
+              cursor: "pointer",
+              position: "relative",
             }}
           >
-            {song.title}
-          </h2>
-          <p
-            style={{
-              fontSize: "11px",
-              margin: "2px 0",
-              textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-            }}
-          >
-            {song.artist}
-          </p>
-        </div>
+            <img
+              src={thumbnail}
+              alt="thumbnail"
+              style={{ width: "100%", borderRadius: "10px" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "26px",
+                color: "#fff",
+              }}
+            >
+              ▶
+            </div>
+          </div>
+        )}
         <div
           style={{
-            marginTop: "auto",
+            marginTop: "6px",
             display: "flex",
             flexWrap: "wrap",
             gap: "4px",
-            minHeight: "20px",
           }}
         >
           {occurrences.map((o, i) => (
@@ -98,36 +122,7 @@ function SongCard({ song, darkMode }) {
             </button>
           ))}
         </div>
-        {selected.videoId && (
-          <div
-            onClick={() => setShowModal(true)}
-            style={{
-              marginTop: "6px",
-              cursor: "pointer",
-              position: "relative",
-            }}
-          >
-            <img
-              src={thumbnail}
-              alt="thumbnail"
-              style={{ width: "100%", borderRadius: "10px" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                fontSize: "26px",
-                color: "#fff",
-              }}
-            >
-              ▶
-            </div>
-          </div>
-        )}
       </div>
-
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -196,7 +191,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [cols, setCols] = useState(2);
+  const [cols, setCols] = useState(3);
 
   const PAGE_SIZE = 30;
 
@@ -266,7 +261,7 @@ export default function Home() {
   });
 
   const filtered = groupedSongs
-    .filter((s) => s.title.toLowerCase().includes(search.toLowerCase()) || s.artist.toLowerCase().includes(search.toLowerCase()))
+    .filter((s) => s.title.includes(search) || s.artist.includes(search))
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -387,8 +382,9 @@ export default function Home() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "16px",
+          gap: "8px",
           marginTop: "24px",
+          flexWrap: "wrap",
         }}
       >
         <button
@@ -405,9 +401,17 @@ export default function Home() {
         >
           前のページ
         </button>
-        <span style={{ color: "#fff" }}>
-          {page} / {totalPages}
-        </span>
+        <select
+          value={page}
+          onChange={(e) => setPage(Number(e.target.value))}
+          style={{ padding: "6px", borderRadius: "8px" }}
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1} ページ
+            </option>
+          ))}
+        </select>
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
