@@ -1,8 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Handlee } from "next/font/google";
-
-const handlee = Handlee({ subsets: ["latin"], weight: "400" });
 
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -10,9 +7,7 @@ function SongCard({ song, darkMode }) {
 
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
-  const thumbnail = selected.videoId
-    ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`
-    : "";
+  const thumbnail = selected.videoId ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg` : "";
 
   return (
     <div
@@ -20,13 +15,10 @@ function SongCard({ song, darkMode }) {
         position: "relative",
         padding: "16px",
         borderRadius: "20px",
-        backgroundColor: darkMode
-          ? "rgba(91,33,182,0.6)"
-          : "rgba(255,255,255,0.6)",
+        backgroundColor: darkMode ? "rgba(91,33,182,0.6)" : "rgba(255,255,255,0.6)",
         color: darkMode ? "#fff" : "#6b21a8",
-        boxShadow: "0 6px 12px rgba(0,0,0,0.2)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
+        backdropFilter: "blur(12px)",
         overflow: "hidden",
       }}
     >
@@ -46,12 +38,13 @@ function SongCard({ song, darkMode }) {
           fontSize: "18px",
           fontWeight: "bold",
           marginBottom: "4px",
+          fontFamily: "'Indie Flower', cursive",
           textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
         }}
       >
-        {song.title}
+        ♄ {song.title} ♪
       </h2>
-      <p>アーティスト: {song.artist}</p>
+      <p style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.2)" }}>アーティスト: {song.artist}</p>
       <div
         style={{
           marginTop: "8px",
@@ -89,10 +82,7 @@ function SongCard({ song, darkMode }) {
       <div style={{ marginTop: "12px" }}>
         {selected.videoId &&
           (!loaded ? (
-            <div
-              onClick={() => setLoaded(true)}
-              style={{ cursor: "pointer", position: "relative" }}
-            >
+            <div onClick={() => setLoaded(true)} style={{ cursor: "pointer", position: "relative" }}>
               <img
                 src={thumbnail}
                 alt="thumbnail"
@@ -114,9 +104,7 @@ function SongCard({ song, darkMode }) {
           ) : (
             <iframe
               style={{ width: "100%", height: "160px", borderRadius: "12px" }}
-              src={`https://www.youtube.com/embed/${selected.videoId}?start=${
-                selected.start || 0
-              }&autoplay=1`}
+              src={`https://www.youtube.com/embed/${selected.videoId}?start=${selected.start || 0}&autoplay=1`}
               title={song.title || "動画"}
               allowFullScreen
             />
@@ -216,17 +204,16 @@ export default function Home() {
         }}
       >
         <h1
-          className={handlee.className}
           style={{
             fontSize: "36px",
             fontWeight: "bold",
             color: "#fff",
-            textShadow: "2px 2px 6px rgba(0,0,0,0.3)",
+            fontFamily: "'Indie Flower', cursive",
+            textShadow: "3px 3px 6px rgba(0,0,0,0.3)",
           }}
         >
-          ♄ネガちデータベース
+          ♄ ネガちデータベース ♪
         </h1>
-
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
             type="text"
@@ -295,7 +282,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
       <div
         style={{
           display: "grid",
@@ -304,14 +290,9 @@ export default function Home() {
         }}
       >
         {pageData.map((song) => (
-          <SongCard
-            key={song.title + song.artist}
-            song={song}
-            darkMode={darkMode}
-          />
+          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
         ))}
       </div>
-
       <div
         style={{
           display: "flex",
