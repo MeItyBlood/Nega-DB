@@ -16,6 +16,9 @@ function SongCard({ song, darkMode }) {
     <>
       <div
         style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
           position: "relative",
           padding: "10px",
           borderRadius: "16px",
@@ -27,6 +30,7 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
+          height: "220px",
         }}
       >
         <img
@@ -40,32 +44,35 @@ function SongCard({ song, darkMode }) {
             height: "16px",
           }}
         />
-        <h2
-          style={{
-            fontSize: "14px",
-            fontWeight: "bold",
-            marginBottom: "2px",
-            textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-            lineHeight: "1.2",
-          }}
-        >
-          {song.title}
-        </h2>
-        <p
-          style={{
-            fontSize: "11px",
-            margin: "2px 0",
-            textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-          }}
-        >
-          {song.artist}
-        </p>
+        <div>
+          <h2
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "2px",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+              lineHeight: "1.2",
+            }}
+          >
+            {song.title}
+          </h2>
+          <p
+            style={{
+              fontSize: "11px",
+              margin: "2px 0",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+            }}
+          >
+            {song.artist}
+          </p>
+        </div>
         <div
           style={{
-            marginTop: "6px",
+            marginTop: "auto",
             display: "flex",
             flexWrap: "wrap",
             gap: "4px",
+            minHeight: "20px",
           }}
         >
           {occurrences.map((o, i) => (
@@ -95,7 +102,7 @@ function SongCard({ song, darkMode }) {
           <div
             onClick={() => setShowModal(true)}
             style={{
-              marginTop: "8px",
+              marginTop: "6px",
               cursor: "pointer",
               position: "relative",
             }}
@@ -120,6 +127,7 @@ function SongCard({ song, darkMode }) {
           </div>
         )}
       </div>
+
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -188,8 +196,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [cols, setCols] = useState(3);
-  const [jumpPage, setJumpPage] = useState("");
+  const [cols, setCols] = useState(2);
 
   const PAGE_SIZE = 30;
 
@@ -259,11 +266,7 @@ export default function Home() {
   });
 
   const filtered = groupedSongs
-    .filter(
-      (s) =>
-        s.title.toLowerCase().includes(search.toLowerCase()) ||
-        s.artist.toLowerCase().includes(search.toLowerCase())
-    )
+    .filter((s) => s.title.toLowerCase().includes(search.toLowerCase()) || s.artist.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -376,11 +379,7 @@ export default function Home() {
         }}
       >
         {pageData.map((song) => (
-          <SongCard
-            key={song.title + song.artist}
-            song={song}
-            darkMode={darkMode}
-          />
+          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
         ))}
       </div>
       <div
@@ -390,7 +389,6 @@ export default function Home() {
           alignItems: "center",
           gap: "16px",
           marginTop: "24px",
-          flexWrap: "wrap",
         }}
       >
         <button
@@ -423,38 +421,6 @@ export default function Home() {
           }}
         >
           次のページ
-        </button>
-        <input
-          type="number"
-          min={1}
-          max={totalPages}
-          value={jumpPage}
-          onChange={(e) => setJumpPage(e.target.value)}
-          placeholder="ページ番号"
-          style={{
-            width: "60px",
-            padding: "6px 8px",
-            borderRadius: "8px",
-            border: "2px solid #fff",
-            textAlign: "center",
-          }}
-        />
-        <button
-          onClick={() => {
-            const num = parseInt(jumpPage);
-            if (!isNaN(num) && num >= 1 && num <= totalPages) setPage(num);
-            setJumpPage("");
-          }}
-          style={{
-            padding: "6px 12px",
-            borderRadius: "12px",
-            border: "none",
-            backgroundColor: "#fff",
-            color: "#d946ef",
-            cursor: "pointer",
-          }}
-        >
-          移動
         </button>
       </div>
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
