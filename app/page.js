@@ -11,15 +11,20 @@ function SongCard({ song, darkMode }) {
 
   return (
     <div
-      style={{
-        position: "relative",
-        padding: "16px",
-        borderRadius: "20px",
-        backgroundColor: darkMode ? "#5b21b6" : "#fff",
-        color: darkMode ? "#fff" : "#6b21a8",
-        boxShadow: "0 6px 12px rgba(0,0,0,0.2)",
-        overflow: "hidden",
-      }}
+  style={{
+    position: "relative",
+    padding: "16px",
+    borderRadius: "20px",
+    backgroundColor: darkMode
+      ? "rgba(91, 33, 182, 0.4)"
+      : "rgba(255, 255, 255, 0.4)",
+    color: darkMode ? "#fff" : "#6b21a8",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255,255,255,0.3)",
+    overflow: "hidden",
+  }}
+>
     >
       <img
         src="/kyomu1.png"
@@ -204,7 +209,7 @@ export default function Home() {
     textShadow: "2px 2px 4px rgba(0,0,0,0.6), 0 0 6px rgba(255,255,255,0.3)"
   }}
 >
-  ♄ ネガちデータベース
+  ♄ネガちデータベース
 </h1>
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
