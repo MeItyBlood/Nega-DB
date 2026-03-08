@@ -356,6 +356,7 @@ export default function Home() {
               color: "#d946ef",
               textDecoration: "none",
               fontWeight: "bold",
+              fontSize: "14px", 
             }}
           >
             このサイトについて
