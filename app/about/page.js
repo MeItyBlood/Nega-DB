@@ -6,7 +6,6 @@ import Link from "next/link";
 export default function About() {
   const [darkMode, setDarkMode] = useState(false);
 
-  // 初回読み込み時に保存値を読む
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) setDarkMode(saved === "true");
@@ -95,7 +94,6 @@ export default function About() {
             flexWrap: "wrap",
           }}
         >
-          {/* ダークモード切替 */}
           <button
             onClick={() => {
               const newMode = !darkMode;
@@ -115,7 +113,6 @@ export default function About() {
             {darkMode ? "ライト" : "ダーク"}
           </button>
 
-          {/* トップページリンク */}
           <Link
             href="/"
             style={{
