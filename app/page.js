@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
-
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
   const thumbnail = selected.videoId
@@ -38,7 +37,6 @@ function SongCard({ song, darkMode }) {
           height: "16px",
         }}
       />
-
       <h2
         style={{
           fontSize: "14px",
@@ -50,17 +48,6 @@ function SongCard({ song, darkMode }) {
       >
         {song.title}
       </h2>
-
-      <p
-        style={{
-          fontSize: "11px",
-          margin: "2px 0",
-          textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-        }}
-      >
-        {song.artist}
-      </p>
-
       <div
         style={{
           marginTop: "6px",
@@ -95,7 +82,6 @@ function SongCard({ song, darkMode }) {
           </button>
         ))}
       </div>
-
       <div style={{ marginTop: "8px" }}>
         {selected.videoId &&
           (!loaded ? (
@@ -143,16 +129,16 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [cols, setCols] = useState(3);
+  const [cols, setCols] = useState(2);
 
   const PAGE_SIZE = 30;
 
   useEffect(() => {
     const updateCols = () => {
       const w = window.innerWidth;
-      if (w < 640) setCols(3);
-      else if (w < 900) setCols(4);
-      else if (w < 1200) setCols(5);
+      if (w < 640) setCols(2);
+      else if (w < 900) setCols(3);
+      else if (w < 1200) setCols(4);
       else setCols(6);
     };
     updateCols();
