@@ -68,7 +68,7 @@ function SongCard({ song, darkMode, cardHeight }) {
           <div
             onClick={() => setShowModal(true)}
             style={{
-              marginTop: "8px",
+              marginTop: "auto",
               cursor: "pointer",
               position: "relative",
               width: "100%",
