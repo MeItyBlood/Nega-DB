@@ -1,5 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Handlee } from "next/font/google";
+
+const handlee = Handlee({ subsets: ["latin"], weight: "400" });
 
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -7,24 +10,25 @@ function SongCard({ song, darkMode }) {
 
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
-  const thumbnail = selected.videoId ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg` : "";
+  const thumbnail = selected.videoId
+    ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`
+    : "";
 
   return (
     <div
-  style={{
-    position: "relative",
-    padding: "16px",
-    borderRadius: "20px",
-    backgroundColor: darkMode
-      ? "rgba(91, 33, 182, 0.4)"
-      : "rgba(255, 255, 255, 0.4)",
-    color: darkMode ? "#fff" : "#6b21a8",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(255,255,255,0.3)",
-    overflow: "hidden",
-  }}
->
+      style={{
+        position: "relative",
+        padding: "16px",
+        borderRadius: "20px",
+        backgroundColor: darkMode
+          ? "rgba(91,33,182,0.6)"
+          : "rgba(255,255,255,0.6)",
+        color: darkMode ? "#fff" : "#6b21a8",
+        boxShadow: "0 6px 12px rgba(0,0,0,0.2)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        overflow: "hidden",
+      }}
     >
       <img
         src="/kyomu1.png"
@@ -37,7 +41,14 @@ function SongCard({ song, darkMode }) {
           height: "20px",
         }}
       />
-      <h2 style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "4px" }}>
+      <h2
+        style={{
+          fontSize: "18px",
+          fontWeight: "bold",
+          marginBottom: "4px",
+          textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+        }}
+      >
         {song.title}
       </h2>
       <p>アーティスト: {song.artist}</p>
@@ -103,7 +114,9 @@ function SongCard({ song, darkMode }) {
           ) : (
             <iframe
               style={{ width: "100%", height: "160px", borderRadius: "12px" }}
-              src={`https://www.youtube.com/embed/${selected.videoId}?start=${selected.start || 0}&autoplay=1`}
+              src={`https://www.youtube.com/embed/${selected.videoId}?start=${
+                selected.start || 0
+              }&autoplay=1`}
               title={song.title || "動画"}
               allowFullScreen
             />
@@ -120,6 +133,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
+
   const PAGE_SIZE = 30;
 
   useEffect(() => {
@@ -146,7 +160,11 @@ export default function Home() {
           title: song.title,
           artist: song.artist,
           occurrences: [
-            { date: song.date, videoId: song.videoId, start: song.start },
+            {
+              date: song.date,
+              videoId: song.videoId,
+              start: song.start,
+            },
           ],
         };
       } else {
@@ -198,19 +216,16 @@ export default function Home() {
         }}
       >
         <h1
-  style={{
-    fontSize: "36px",
-    fontWeight: "bold",
-    color: "#fff",
-    fontFamily: "'Baloo 2', cursive",
-    backgroundColor: "rgba(0,0,0,0.2)",
-    padding: "8px 12px",
-    borderRadius: "12px",
-    textShadow: "2px 2px 4px rgba(0,0,0,0.6), 0 0 6px rgba(255,255,255,0.3)"
-  }}
->
-  ♄ネガちデータベース
-</h1>
+          className={handlee.className}
+          style={{
+            fontSize: "36px",
+            fontWeight: "bold",
+            color: "#fff",
+            textShadow: "2px 2px 6px rgba(0,0,0,0.3)",
+          }}
+        >
+          ♄ネガちデータベース
+        </h1>
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
@@ -289,7 +304,11 @@ export default function Home() {
         }}
       >
         {pageData.map((song) => (
-          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
+          <SongCard
+            key={song.title + song.artist}
+            song={song}
+            darkMode={darkMode}
+          />
         ))}
       </div>
 
@@ -316,11 +335,9 @@ export default function Home() {
         >
           前のページ
         </button>
-
         <span style={{ color: "#fff" }}>
           {page} / {totalPages}
         </span>
-
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -336,7 +353,6 @@ export default function Home() {
           次のページ
         </button>
       </div>
-
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
