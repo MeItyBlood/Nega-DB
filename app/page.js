@@ -38,11 +38,10 @@ function SongCard({ song, darkMode }) {
           fontSize: "18px",
           fontWeight: "bold",
           marginBottom: "4px",
-          fontFamily: "'Indie Flower', cursive",
           textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
         }}
       >
-        ♄ {song.title} ♪
+        {song.title}
       </h2>
       <p style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.2)" }}>アーティスト: {song.artist}</p>
       <div
@@ -208,11 +207,10 @@ export default function Home() {
             fontSize: "36px",
             fontWeight: "bold",
             color: "#fff",
-            fontFamily: "'Indie Flower', cursive",
             textShadow: "3px 3px 6px rgba(0,0,0,0.3)",
           }}
         >
-          ♄ ネガちデータベース ♪
+          ♄ ネガちデータベース
         </h1>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
