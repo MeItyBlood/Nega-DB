@@ -193,18 +193,19 @@ export default function Home() {
         }}
       >
         <h1
-          style={{
-            fontSize: "36px",
-            fontWeight: "bold",
-            color: "#fff",
-            fontFamily: "'Baloo 2', cursive",
-            backgroundColor: "rgba(0,0,0,0.2)",
-            padding: "8px 12px",
-            borderRadius: "12px",
-          }}
-        >
-          ♄ ネガちデータベース ♪
-        </h1>
+  style={{
+    fontSize: "36px",
+    fontWeight: "bold",
+    color: "#fff",
+    fontFamily: "'Baloo 2', cursive",
+    backgroundColor: "rgba(0,0,0,0.2)",
+    padding: "8px 12px",
+    borderRadius: "12px",
+    textShadow: "2px 2px 4px rgba(0,0,0,0.6), 0 0 6px rgba(255,255,255,0.3)"
+  }}
+>
+  ♄ ネガちデータベース
+</h1>
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
