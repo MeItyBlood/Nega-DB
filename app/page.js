@@ -8,7 +8,6 @@ function SongCard({ song, darkMode }) {
 
   // undefined対策
   const selected = song.occurrences?.[selectedIndex] || song.occurrences?.[0] || {};
-
   const thumbnail = selected.videoId
     ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`
     : "";
@@ -123,7 +122,7 @@ export default function Home() {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-  // データ取得（エラー時は空配列）
+  // データ取得（失敗時も空配列で安全）
   useEffect(() => {
     fetch("/api/songs")
       .then((res) => res.json())
