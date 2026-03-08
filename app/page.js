@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useState, useEffect } from "react";
 
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
   const thumbnail = selected.videoId
@@ -37,6 +39,7 @@ function SongCard({ song, darkMode }) {
           height: "16px",
         }}
       />
+
       <h2
         style={{
           fontSize: "14px",
@@ -48,6 +51,17 @@ function SongCard({ song, darkMode }) {
       >
         {song.title}
       </h2>
+
+      <p
+        style={{
+          fontSize: "11px",
+          margin: "2px 0",
+          textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+        }}
+      >
+        {song.artist}
+      </p>
+
       <div
         style={{
           marginTop: "6px",
@@ -64,7 +78,7 @@ function SongCard({ song, darkMode }) {
               setLoaded(false);
             }}
             style={{
-              fontSize: "11px",
+              fontSize: "12px",
               padding: "2px 5px",
               borderRadius: "10px",
               border: "none",
@@ -82,6 +96,7 @@ function SongCard({ song, darkMode }) {
           </button>
         ))}
       </div>
+
       <div style={{ marginTop: "8px" }}>
         {selected.videoId &&
           (!loaded ? (
@@ -108,14 +123,23 @@ function SongCard({ song, darkMode }) {
               </div>
             </div>
           ) : (
-            <iframe
-              style={{ width: "100%", height: "110px", borderRadius: "10px" }}
-              src={`https://www.youtube.com/embed/${selected.videoId}?start=${
-                selected.start || 0
-              }&autoplay=1`}
-              title={song.title || "動画"}
-              allowFullScreen
-            />
+            <div style={{ position: "relative", width: "100%", paddingTop: "56.25%" }}>
+              <iframe
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "10px",
+                }}
+                src={`https://www.youtube.com/embed/${selected.videoId}?start=${
+                  selected.start || 0
+                }&autoplay=1`}
+                title={song.title || "動画"}
+                allowFullScreen
+              />
+            </div>
           ))}
       </div>
     </div>
@@ -137,8 +161,8 @@ export default function Home() {
     const updateCols = () => {
       const w = window.innerWidth;
       if (w < 640) setCols(2);
-      else if (w < 900) setCols(3);
-      else if (w < 1200) setCols(4);
+      else if (w < 900) setCols(4);
+      else if (w < 1200) setCols(5);
       else setCols(6);
     };
     updateCols();
