@@ -7,7 +7,9 @@ function SongCard({ song, darkMode }) {
 
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
-  const thumbnail = selected.videoId ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg` : "";
+  const thumbnail = selected.videoId
+    ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`
+    : "";
 
   return (
     <div
@@ -15,7 +17,9 @@ function SongCard({ song, darkMode }) {
         position: "relative",
         padding: "16px",
         borderRadius: "20px",
-        backgroundColor: darkMode ? "rgba(91,33,182,0.6)" : "rgba(255,255,255,0.6)",
+        backgroundColor: darkMode
+          ? "rgba(91,33,182,0.6)"
+          : "rgba(255,255,255,0.6)",
         color: darkMode ? "#fff" : "#6b21a8",
         boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
         backdropFilter: "blur(12px)",
@@ -43,7 +47,10 @@ function SongCard({ song, darkMode }) {
       >
         {song.title}
       </h2>
-      <p style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.2)" }}>アーティスト: {song.artist}</p>
+      <p style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.2)" }}>
+        アーティスト: {song.artist}
+      </p>
+
       <div
         style={{
           marginTop: "8px",
@@ -78,10 +85,14 @@ function SongCard({ song, darkMode }) {
           </button>
         ))}
       </div>
+
       <div style={{ marginTop: "12px" }}>
         {selected.videoId &&
           (!loaded ? (
-            <div onClick={() => setLoaded(true)} style={{ cursor: "pointer", position: "relative" }}>
+            <div
+              onClick={() => setLoaded(true)}
+              style={{ cursor: "pointer", position: "relative" }}
+            >
               <img
                 src={thumbnail}
                 alt="thumbnail"
@@ -103,7 +114,9 @@ function SongCard({ song, darkMode }) {
           ) : (
             <iframe
               style={{ width: "100%", height: "160px", borderRadius: "12px" }}
-              src={`https://www.youtube.com/embed/${selected.videoId}?start=${selected.start || 0}&autoplay=1`}
+              src={`https://www.youtube.com/embed/${selected.videoId}?start=${
+                selected.start || 0
+              }&autoplay=1`}
               title={song.title || "動画"}
               allowFullScreen
             />
@@ -212,6 +225,7 @@ export default function Home() {
         >
           ♄ ネガちデータベース
         </h1>
+
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <input
             type="text"
@@ -226,6 +240,7 @@ export default function Home() {
               width: "200px",
             }}
           />
+
           <button
             onClick={() => setSortAZ(!sortAZ)}
             style={{
@@ -239,6 +254,7 @@ export default function Home() {
           >
             {sortAZ ? "五十音順解除" : "五十音順"}
           </button>
+
           <button
             onClick={() => setDateDesc(!dateDesc)}
             style={{
@@ -252,6 +268,7 @@ export default function Home() {
           >
             {dateDesc ? "日付：新→旧" : "日付：旧→新"}
           </button>
+
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{
@@ -265,6 +282,7 @@ export default function Home() {
           >
             {darkMode ? "ライト" : "ダーク"}
           </button>
+
           <a
             href="/about"
             style={{
@@ -280,17 +298,23 @@ export default function Home() {
           </a>
         </div>
       </div>
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: "32px",
         }}
       >
         {pageData.map((song) => (
-          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
+          <SongCard
+            key={song.title + song.artist}
+            song={song}
+            darkMode={darkMode}
+          />
         ))}
       </div>
+
       <div
         style={{
           display: "flex",
@@ -314,9 +338,11 @@ export default function Home() {
         >
           前のページ
         </button>
+
         <span style={{ color: "#fff" }}>
           {page} / {totalPages}
         </span>
+
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -332,6 +358,7 @@ export default function Home() {
           次のページ
         </button>
       </div>
+
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
