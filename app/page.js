@@ -32,12 +32,10 @@ function SongCard({ song, darkMode }) {
           height: "20px",
         }}
       />
-
       <h2 style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "4px" }}>
         {song.title}
       </h2>
       <p>アーティスト: {song.artist}</p>
-
       <div
         style={{
           marginTop: "8px",
@@ -72,11 +70,13 @@ function SongCard({ song, darkMode }) {
           </button>
         ))}
       </div>
-
       <div style={{ marginTop: "12px" }}>
-        {selected.videoId && (
-          !loaded ? (
-            <div onClick={() => setLoaded(true)} style={{ cursor: "pointer", position: "relative" }}>
+        {selected.videoId &&
+          (!loaded ? (
+            <div
+              onClick={() => setLoaded(true)}
+              style={{ cursor: "pointer", position: "relative" }}
+            >
               <img
                 src={thumbnail}
                 alt="thumbnail"
@@ -102,8 +102,7 @@ function SongCard({ song, darkMode }) {
               title={song.title || "動画"}
               allowFullScreen
             />
-          )
-        )}
+          ))}
       </div>
     </div>
   );
@@ -116,7 +115,6 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-
   const PAGE_SIZE = 30;
 
   useEffect(() => {
@@ -143,11 +141,7 @@ export default function Home() {
           title: song.title,
           artist: song.artist,
           occurrences: [
-            {
-              date: song.date,
-              videoId: song.videoId,
-              start: song.start,
-            },
+            { date: song.date, videoId: song.videoId, start: song.start },
           ],
         };
       } else {
@@ -166,7 +160,6 @@ export default function Home() {
       const dateDiff = dateDesc
         ? new Date(b.date) - new Date(a.date)
         : new Date(a.date) - new Date(b.date);
-
       if (dateDiff !== 0) return dateDiff;
       return (a.start || 0) - (b.start || 0);
     });
@@ -199,8 +192,18 @@ export default function Home() {
           marginBottom: "24px",
         }}
       >
-        <h1 style={{ fontSize: "36px", fontWeight: "bold", color: "#fff" }}>
-          ネガちデータベース
+        <h1
+          style={{
+            fontSize: "36px",
+            fontWeight: "bold",
+            color: "#fff",
+            fontFamily: "'Baloo 2', cursive",
+            backgroundColor: "rgba(0,0,0,0.2)",
+            padding: "8px 12px",
+            borderRadius: "12px",
+          }}
+        >
+          ♄ ネガちデータベース ♪
         </h1>
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -217,7 +220,6 @@ export default function Home() {
               width: "200px",
             }}
           />
-
           <button
             onClick={() => setSortAZ(!sortAZ)}
             style={{
@@ -231,7 +233,6 @@ export default function Home() {
           >
             {sortAZ ? "五十音順解除" : "五十音順"}
           </button>
-
           <button
             onClick={() => setDateDesc(!dateDesc)}
             style={{
@@ -245,7 +246,6 @@ export default function Home() {
           >
             {dateDesc ? "日付：新→旧" : "日付：旧→新"}
           </button>
-
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{
@@ -259,7 +259,6 @@ export default function Home() {
           >
             {darkMode ? "ライト" : "ダーク"}
           </button>
-
           <a
             href="/about"
             style={{
