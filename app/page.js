@@ -6,8 +6,12 @@ function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
-  const selected = song.occurrences[selectedIndex];
-  const thumbnail = `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`;
+  // undefined対策
+  const selected = song.occurrences?.[selectedIndex] || song.occurrences?.[0] || {};
+
+  const thumbnail = selected.videoId
+    ? `https://img.youtube.com/vi/${selected.videoId}/hqdefault.jpg`
+    : "";
 
   return (
     <div
@@ -21,7 +25,6 @@ function SongCard({ song, darkMode }) {
         overflow: "hidden",
       }}
     >
-      {/* 右上アイコン */}
       <img
         src="/kyomu1.png"
         alt="icon"
@@ -39,16 +42,8 @@ function SongCard({ song, darkMode }) {
       </h2>
       <p>アーティスト: {song.artist}</p>
 
-      {/* 日付ボタン */}
-      <div
-        style={{
-          marginTop: "8px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "6px",
-        }}
-      >
-        {song.occurrences.map((o, i) => (
+      <div style={{ marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {song.occurrences?.map((o, i) => (
           <button
             key={i}
             onClick={() => {
@@ -75,42 +70,32 @@ function SongCard({ song, darkMode }) {
         ))}
       </div>
 
-      {/* 動画（軽量） */}
       <div style={{ marginTop: "12px" }}>
-        {!loaded ? (
-          <div
-            onClick={() => setLoaded(true)}
-            style={{ cursor: "pointer", position: "relative" }}
-          >
-            <img
-              src={thumbnail}
-              alt="thumbnail"
-              style={{ width: "100%", borderRadius: "12px" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                fontSize: "40px",
-                color: "#fff",
-              }}
-            >
-              ▶
+        {selected.videoId && (
+          !loaded ? (
+            <div onClick={() => setLoaded(true)} style={{ cursor: "pointer", position: "relative" }}>
+              <img src={thumbnail} alt="thumbnail" style={{ width: "100%", borderRadius: "12px" }} />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "40px",
+                  color: "#fff",
+                }}
+              >
+                ▶
+              </div>
             </div>
-          </div>
-        ) : (
-          <iframe
-            style={{
-              width: "100%",
-              height: "160px",
-              borderRadius: "12px",
-            }}
-            src={`https://www.youtube.com/embed/${selected.videoId}?start=${selected.start || 0}&autoplay=1`}
-            title={song.title}
-            allowFullScreen
-          />
+          ) : (
+            <iframe
+              style={{ width: "100%", height: "160px", borderRadius: "12px" }}
+              src={`https://www.youtube.com/embed/${selected.videoId}?start=${selected.start || 0}&autoplay=1`}
+              title={song.title}
+              allowFullScreen
+            />
+          )
         )}
       </div>
     </div>
@@ -128,26 +113,25 @@ export default function Home() {
 
   const PAGE_SIZE = 30;
 
-  /* ダークモード読み込み */
+  // ダークモード読み込み
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) setDarkMode(saved === "true");
   }, []);
 
-  /* ダークモード保存 */
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-  /* データ取得 */
+  // データ取得（エラー時は空配列）
   useEffect(() => {
     fetch("/api/songs")
       .then((res) => res.json())
       .then((data) => setSongs(data))
-      .catch(console.error);
+      .catch(() => setSongs([]));
   }, []);
 
-  /* 曲まとめ */
+  // 曲まとめ
   const groupedSongs = Object.values(
     songs.reduce((acc, song) => {
       const key = song.title + "||" + song.artist;
@@ -174,13 +158,11 @@ export default function Home() {
     }, {})
   );
 
-  /* 日付順ソート */
   groupedSongs.forEach((song) => {
     song.occurrences.sort((a, b) => {
       const dateDiff = dateDesc
         ? new Date(b.date) - new Date(a.date)
         : new Date(a.date) - new Date(b.date);
-
       if (dateDiff !== 0) return dateDiff;
       return (a.start || 0) - (b.start || 0);
     });
@@ -203,7 +185,6 @@ export default function Home() {
           : "linear-gradient(135deg, #d946ef, #f43f5e)",
       }}
     >
-      {/* ヘッダー */}
       <div
         style={{
           display: "flex",
@@ -232,7 +213,6 @@ export default function Home() {
               width: "200px",
             }}
           />
-
           <button
             onClick={() => setSortAZ(!sortAZ)}
             style={{
@@ -291,7 +271,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* カード */}
       <div
         style={{
           display: "grid",
@@ -300,15 +279,10 @@ export default function Home() {
         }}
       >
         {pageData.map((song) => (
-          <SongCard
-            key={song.title + song.artist}
-            song={song}
-            darkMode={darkMode}
-          />
+          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
         ))}
       </div>
 
-      {/* ページネーション */}
       <div
         style={{
           display: "flex",
