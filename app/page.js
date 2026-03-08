@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-function SongCard({ song, darkMode }) {
+function SongCard({ song, darkMode, cardHeight }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
@@ -30,6 +30,7 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
+          minHeight: `${cardHeight}px`,
         }}
       >
         <img
@@ -70,12 +71,20 @@ function SongCard({ song, darkMode }) {
               marginTop: "8px",
               cursor: "pointer",
               position: "relative",
+              width: "100%",
+              height: "110px",
+              flexShrink: 0,
             }}
           >
             <img
               src={thumbnail}
               alt="thumbnail"
-              style={{ width: "100%", borderRadius: "10px" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
             />
             <div
               style={{
@@ -97,6 +106,7 @@ function SongCard({ song, darkMode }) {
             display: "flex",
             flexWrap: "wrap",
             gap: "4px",
+            marginBottom: "2px",
           }}
         >
           {occurrences.map((o, i) => (
@@ -184,6 +194,14 @@ function SongCard({ song, darkMode }) {
   );
 }
 
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) =>
+      String.fromCharCode(s.charCodeAt(0) - 0xfee0)
+    );
+}
+
 export default function Home() {
   const [songs, setSongs] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
@@ -192,6 +210,8 @@ export default function Home() {
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
   const [cols, setCols] = useState(3);
+  const [cardHeight, setCardHeight] = useState(0);
+  const cardRefs = useRef([]);
 
   const PAGE_SIZE = 30;
 
@@ -261,11 +281,21 @@ export default function Home() {
   });
 
   const filtered = groupedSongs
-    .filter((s) => s.title.includes(search) || s.artist.includes(search))
+    .filter(
+      (s) =>
+        normalizeString(s.title).includes(normalizeString(search)) ||
+        normalizeString(s.artist).includes(normalizeString(search))
+    )
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => {
+    const heights = cardRefs.current.map((el) => el?.offsetHeight || 0);
+    const maxHeight = Math.max(...heights, 0);
+    setCardHeight(maxHeight);
+  }, [pageData, darkMode]);
 
   return (
     <main
@@ -373,8 +403,10 @@ export default function Home() {
           gap: "18px",
         }}
       >
-        {pageData.map((song) => (
-          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
+        {pageData.map((song, i) => (
+          <div ref={(el) => (cardRefs.current[i] = el)} key={song.title + song.artist}>
+            <SongCard song={song} darkMode={darkMode} cardHeight={cardHeight} />
+          </div>
         ))}
       </div>
       <div
