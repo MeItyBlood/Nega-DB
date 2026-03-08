@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-/* ------------------ 曲カード ------------------ */
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -110,7 +109,6 @@ function SongCard({ song, darkMode }) {
   );
 }
 
-/* ------------------ メイン ------------------ */
 export default function Home() {
   const [songs, setSongs] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
@@ -121,18 +119,15 @@ export default function Home() {
 
   const PAGE_SIZE = 30;
 
-  /* ダークモード読み込み */
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) setDarkMode(saved === "true");
   }, []);
 
-  /* ダークモード保存 */
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-  /* データ取得 */
   useEffect(() => {
     fetch("/api/songs")
       .then((res) => res.json())
@@ -140,7 +135,6 @@ export default function Home() {
       .catch(() => setSongs([]));
   }, []);
 
-  /* 曲まとめ */
   const groupedSongs = Object.values(
     songs.reduce((acc, song) => {
       const key = song.title + "||" + song.artist;
@@ -167,7 +161,6 @@ export default function Home() {
     }, {})
   );
 
-  /* 日付順ソート */
   groupedSongs.forEach((song) => {
     song.occurrences.sort((a, b) => {
       const dateDiff = dateDesc
@@ -196,7 +189,6 @@ export default function Home() {
           : "linear-gradient(135deg, #d946ef, #f43f5e)",
       }}
     >
-      {/* ヘッダー */}
       <div
         style={{
           display: "flex",
@@ -284,7 +276,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* カード */}
       <div
         style={{
           display: "grid",
@@ -297,7 +288,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* ページネーション */}
       <div
         style={{
           display: "flex",
