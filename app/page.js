@@ -15,15 +15,16 @@ function SongCard({ song, darkMode }) {
     <div
       style={{
         position: "relative",
-        padding: "16px",
-        borderRadius: "20px",
+        padding: "10px",
+        borderRadius: "16px",
         backgroundColor: darkMode
           ? "rgba(91,33,182,0.6)"
           : "rgba(255,255,255,0.6)",
         color: darkMode ? "#fff" : "#6b21a8",
-        boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
         backdropFilter: "blur(12px)",
         overflow: "hidden",
+        fontSize: "12px",
       }}
     >
       <img
@@ -31,32 +32,41 @@ function SongCard({ song, darkMode }) {
         alt="icon"
         style={{
           position: "absolute",
-          top: "8px",
-          right: "8px",
-          width: "20px",
-          height: "20px",
+          top: "6px",
+          right: "6px",
+          width: "16px",
+          height: "16px",
         }}
       />
+
       <h2
         style={{
-          fontSize: "18px",
+          fontSize: "14px",
           fontWeight: "bold",
-          marginBottom: "4px",
+          marginBottom: "2px",
           textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+          lineHeight: "1.2",
         }}
       >
         {song.title}
       </h2>
-      <p style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.2)" }}>
+
+      <p
+        style={{
+          fontSize: "11px",
+          margin: "2px 0",
+          textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+        }}
+      >
         アーティスト: {song.artist}
       </p>
 
       <div
         style={{
-          marginTop: "8px",
+          marginTop: "6px",
           display: "flex",
           flexWrap: "wrap",
-          gap: "6px",
+          gap: "4px",
         }}
       >
         {occurrences.map((o, i) => (
@@ -67,9 +77,9 @@ function SongCard({ song, darkMode }) {
               setLoaded(false);
             }}
             style={{
-              fontSize: "12px",
-              padding: "4px 8px",
-              borderRadius: "12px",
+              fontSize: "10px",
+              padding: "3px 6px",
+              borderRadius: "10px",
               border: "none",
               cursor: "pointer",
               backgroundColor:
@@ -86,7 +96,7 @@ function SongCard({ song, darkMode }) {
         ))}
       </div>
 
-      <div style={{ marginTop: "12px" }}>
+      <div style={{ marginTop: "8px" }}>
         {selected.videoId &&
           (!loaded ? (
             <div
@@ -96,7 +106,7 @@ function SongCard({ song, darkMode }) {
               <img
                 src={thumbnail}
                 alt="thumbnail"
-                style={{ width: "100%", borderRadius: "12px" }}
+                style={{ width: "100%", borderRadius: "10px" }}
               />
               <div
                 style={{
@@ -104,7 +114,7 @@ function SongCard({ song, darkMode }) {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "40px",
+                  fontSize: "26px",
                   color: "#fff",
                 }}
               >
@@ -113,7 +123,7 @@ function SongCard({ song, darkMode }) {
             </div>
           ) : (
             <iframe
-              style={{ width: "100%", height: "160px", borderRadius: "12px" }}
+              style={{ width: "100%", height: "110px", borderRadius: "10px" }}
               src={`https://www.youtube.com/embed/${selected.videoId}?start=${
                 selected.start || 0
               }&autoplay=1`}
@@ -133,8 +143,22 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
+  const [cols, setCols] = useState(3);
 
   const PAGE_SIZE = 30;
+
+  useEffect(() => {
+    const updateCols = () => {
+      const w = window.innerWidth;
+      if (w < 640) setCols(3);
+      else if (w < 900) setCols(4);
+      else if (w < 1200) setCols(5);
+      else setCols(6);
+    };
+    updateCols();
+    window.addEventListener("resize", updateCols);
+    return () => window.removeEventListener("resize", updateCols);
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
@@ -302,8 +326,8 @@ export default function Home() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "32px",
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gap: "18px",
         }}
       >
         {pageData.map((song) => (
