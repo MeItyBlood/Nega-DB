@@ -30,7 +30,7 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
-          minHeight: "260px",
+          minHeight: "300px",
         }}
       >
         <img
@@ -45,12 +45,32 @@ function SongCard({ song, darkMode }) {
           }}
         />
         <div>
+          <h2
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "2px",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+              lineHeight: "1.2",
+            }}
+          >
+            {song.title}
+          </h2>
+          <p
+            style={{
+              fontSize: "11px",
+              margin: "2px 0 6px 0",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+            }}
+          >
+            {song.artist}
+          </p>
           <div
             style={{
-              marginBottom: "6px",
               display: "flex",
               flexWrap: "wrap",
               gap: "4px",
+              marginBottom: "8px",
             }}
           >
             {occurrences.map((o, i) => (
@@ -76,37 +96,16 @@ function SongCard({ song, darkMode }) {
               </button>
             ))}
           </div>
-          <h2
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "2px",
-              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-              lineHeight: "1.2",
-            }}
-          >
-            {song.title}
-          </h2>
-          <p
-            style={{
-              fontSize: "11px",
-              margin: "2px 0",
-              textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-            }}
-          >
-            {song.artist}
-          </p>
         </div>
 
         {selected.videoId && (
           <div
             onClick={() => setShowModal(true)}
             style={{
-              marginTop: "8px",
+              width: "100%",
+              height: "200px",
               cursor: "pointer",
               position: "relative",
-              width: "100%",
-              height: "140px",
             }}
           >
             <img
@@ -203,6 +202,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
+  const [pageInput, setPageInput] = useState("");
   const [cols, setCols] = useState(3);
 
   const PAGE_SIZE = 30;
@@ -382,6 +382,7 @@ export default function Home() {
           </a>
         </div>
       </div>
+
       <div
         style={{
           display: "grid",
@@ -397,13 +398,15 @@ export default function Home() {
           />
         ))}
       </div>
+
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "16px",
+          gap: "8px",
           marginTop: "24px",
+          flexWrap: "wrap",
         }}
       >
         <button
@@ -437,7 +440,41 @@ export default function Home() {
         >
           次のページ
         </button>
+
+        <input
+          type="number"
+          min="1"
+          max={totalPages}
+          value={pageInput}
+          onChange={(e) => setPageInput(e.target.value)}
+          placeholder="ページ番号"
+          style={{
+            padding: "6px 10px",
+            borderRadius: "8px",
+            border: "2px solid #fff",
+            outline: "none",
+            width: "80px",
+          }}
+        />
+        <button
+          onClick={() => {
+            const p = Math.min(Math.max(1, Number(pageInput)), totalPages);
+            if (!isNaN(p)) setPage(p);
+            setPageInput("");
+          }}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "12px",
+            border: "none",
+            backgroundColor: "#fff",
+            color: "#d946ef",
+            cursor: "pointer",
+          }}
+        >
+          移動
+        </button>
       </div>
+
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
