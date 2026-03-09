@@ -30,7 +30,7 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
-          minHeight: "220px",
+          minHeight: "260px",
         }}
       >
         <img
@@ -44,72 +44,10 @@ function SongCard({ song, darkMode }) {
             height: "16px",
           }}
         />
-        <h2
-          style={{
-            fontSize: "14px",
-            fontWeight: "bold",
-            marginBottom: "2px",
-            textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-            lineHeight: "1.2",
-          }}
-        >
-          {song.title}
-        </h2>
-        <p
-          style={{
-            fontSize: "11px",
-            margin: "2px 0",
-            textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-          }}
-        >
-          {song.artist}
-        </p>
-
-        <div
-          style={{
-            marginTop: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: "4px",
-          }}
-        >
-          {selected.videoId && (
-            <div
-              onClick={() => setShowModal(true)}
-              style={{
-                cursor: "pointer",
-                position: "relative",
-                width: "100%",
-                height: "90px",
-              }}
-            >
-              <img
-                src={thumbnail}
-                alt="thumbnail"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "26px",
-                  color: "#fff",
-                }}
-              >
-                ▶
-              </div>
-            </div>
-          )}
+        <div>
           <div
             style={{
-              marginTop: "6px",
+              marginBottom: "6px",
               display: "flex",
               flexWrap: "wrap",
               gap: "4px",
@@ -138,7 +76,63 @@ function SongCard({ song, darkMode }) {
               </button>
             ))}
           </div>
+          <h2
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "2px",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+              lineHeight: "1.2",
+            }}
+          >
+            {song.title}
+          </h2>
+          <p
+            style={{
+              fontSize: "11px",
+              margin: "2px 0",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+            }}
+          >
+            {song.artist}
+          </p>
         </div>
+
+        {selected.videoId && (
+          <div
+            onClick={() => setShowModal(true)}
+            style={{
+              marginTop: "8px",
+              cursor: "pointer",
+              position: "relative",
+              width: "100%",
+              height: "140px",
+            }}
+          >
+            <img
+              src={thumbnail}
+              alt="thumbnail"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "26px",
+                color: "#fff",
+              }}
+            >
+              ▶
+            </div>
+          </div>
+        )}
       </div>
 
       {showModal && (
