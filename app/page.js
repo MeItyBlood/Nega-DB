@@ -16,9 +16,7 @@ function SongCard({ song, darkMode }) {
     <>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          position: "relative",
           padding: "10px",
           borderRadius: "16px",
           backgroundColor: darkMode
@@ -27,22 +25,13 @@ function SongCard({ song, darkMode }) {
           color: darkMode ? "#fff" : "#6b21a8",
           boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
           backdropFilter: "blur(12px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
           overflow: "hidden",
           fontSize: "12px",
-          minHeight: "320px",
         }}
       >
-        <img
-          src="/kyomu1.png"
-          alt="icon"
-          style={{
-            position: "absolute",
-            top: "6px",
-            right: "6px",
-            width: "16px",
-            height: "16px",
-          }}
-        />
         <div>
           <h2
             style={{
@@ -64,47 +53,46 @@ function SongCard({ song, darkMode }) {
           >
             {song.artist}
           </p>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "4px",
-              marginBottom: "8px",
-            }}
-          >
-            {occurrences.map((o, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedIndex(i)}
-                style={{
-                  fontSize: "11px",
-                  padding: "2px 5px",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor:
-                    i === selectedIndex
-                      ? "#facc15"
-                      : darkMode
-                      ? "#a78bfa"
-                      : "#fbcfe8",
-                  color: "#111",
-                }}
-              >
-                {o.date}
-              </button>
-            ))}
-          </div>
         </div>
-
+        <div style={{ flexGrow: 1 }}></div>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "4px",
+            marginBottom: "6px",
+          }}
+        >
+          {occurrences.map((o, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedIndex(i)}
+              style={{
+                fontSize: "11px",
+                padding: "2px 5px",
+                borderRadius: "10px",
+                border: "none",
+                cursor: "pointer",
+                backgroundColor:
+                  i === selectedIndex
+                    ? "#facc15"
+                    : darkMode
+                    ? "#a78bfa"
+                    : "#fbcfe8",
+                color: "#111",
+              }}
+            >
+              {o.date}
+            </button>
+          ))}
+        </div>
         {selected.videoId && (
           <div
             onClick={() => setShowModal(true)}
             style={{
-              width: "100%",
-              height: "200px",
               cursor: "pointer",
               position: "relative",
+              marginTop: "6px",
             }}
           >
             <img
@@ -112,7 +100,7 @@ function SongCard({ song, darkMode }) {
               alt="thumbnail"
               style={{
                 width: "100%",
-                height: "100%",
+                height: "140px",
                 objectFit: "cover",
                 borderRadius: "10px",
               }}
@@ -132,7 +120,6 @@ function SongCard({ song, darkMode }) {
           </div>
         )}
       </div>
-
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -273,8 +260,8 @@ export default function Home() {
   const filtered = groupedSongs
     .filter(
       (s) =>
-        s.title.toLowerCase().replace(/[\u3000]/g, " ").includes(search.toLowerCase().replace(/[\u3000]/g, " ")) ||
-        s.artist.toLowerCase().replace(/[\u3000]/g, " ").includes(search.toLowerCase().replace(/[\u3000]/g, " "))
+        s.title.toLowerCase().normalize("NFKC").includes(search.toLowerCase().normalize("NFKC")) ||
+        s.artist.toLowerCase().normalize("NFKC").includes(search.toLowerCase().normalize("NFKC"))
     )
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
@@ -380,11 +367,10 @@ export default function Home() {
           </a>
         </div>
       </div>
-
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gridTemplateColumns: `repeat(auto-fit, minmax(180px, 1fr))`,
           gap: "18px",
         }}
       >
@@ -396,13 +382,12 @@ export default function Home() {
           />
         ))}
       </div>
-
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "8px",
+          gap: "16px",
           marginTop: "24px",
           flexWrap: "wrap",
         }}
@@ -421,25 +406,22 @@ export default function Home() {
         >
           前のページ
         </button>
-
         <select
           value={page}
           onChange={(e) => setPage(Number(e.target.value))}
           style={{
-            padding: "6px 10px",
-            borderRadius: "8px",
-            border: "2px solid #fff",
-            outline: "none",
+            padding: "6px 12px",
+            borderRadius: "12px",
+            border: "none",
             cursor: "pointer",
           }}
         >
           {Array.from({ length: totalPages }, (_, i) => (
             <option key={i + 1} value={i + 1}>
-              {i + 1}
+              {i + 1} / {totalPages}
             </option>
           ))}
         </select>
-
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -455,7 +437,6 @@ export default function Home() {
           次のページ
         </button>
       </div>
-
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
