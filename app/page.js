@@ -19,7 +19,6 @@ function SongCard({ song, darkMode }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          position: "relative",
           padding: "10px",
           borderRadius: "16px",
           backgroundColor: darkMode
@@ -30,7 +29,7 @@ function SongCard({ song, darkMode }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
-          minHeight: "300px",
+          minHeight: "320px",
         }}
       >
         <img
@@ -202,7 +201,6 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [pageInput, setPageInput] = useState("");
   const [cols, setCols] = useState(3);
 
   const PAGE_SIZE = 30;
@@ -423,9 +421,25 @@ export default function Home() {
         >
           前のページ
         </button>
-        <span style={{ color: "#fff" }}>
-          {page} / {totalPages}
-        </span>
+
+        <select
+          value={page}
+          onChange={(e) => setPage(Number(e.target.value))}
+          style={{
+            padding: "6px 10px",
+            borderRadius: "8px",
+            border: "2px solid #fff",
+            outline: "none",
+            cursor: "pointer",
+          }}
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -439,39 +453,6 @@ export default function Home() {
           }}
         >
           次のページ
-        </button>
-
-        <input
-          type="number"
-          min="1"
-          max={totalPages}
-          value={pageInput}
-          onChange={(e) => setPageInput(e.target.value)}
-          placeholder="ページ番号"
-          style={{
-            padding: "6px 10px",
-            borderRadius: "8px",
-            border: "2px solid #fff",
-            outline: "none",
-            width: "80px",
-          }}
-        />
-        <button
-          onClick={() => {
-            const p = Math.min(Math.max(1, Number(pageInput)), totalPages);
-            if (!isNaN(p)) setPage(p);
-            setPageInput("");
-          }}
-          style={{
-            padding: "6px 12px",
-            borderRadius: "12px",
-            border: "none",
-            backgroundColor: "#fff",
-            color: "#d946ef",
-            cursor: "pointer",
-          }}
-        >
-          移動
         </button>
       </div>
 
