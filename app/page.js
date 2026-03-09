@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-function SongCard({ song, darkMode, cardHeight }) {
+function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
@@ -30,7 +30,7 @@ function SongCard({ song, darkMode, cardHeight }) {
           backdropFilter: "blur(12px)",
           overflow: "hidden",
           fontSize: "12px",
-          minHeight: `${cardHeight}px`,
+          minHeight: "220px",
         }}
       >
         <img
@@ -64,75 +64,83 @@ function SongCard({ song, darkMode, cardHeight }) {
         >
           {song.artist}
         </p>
-        {selected.videoId && (
-          <div
-            onClick={() => setShowModal(true)}
-            style={{
-              marginTop: "auto",
-              cursor: "pointer",
-              position: "relative",
-              width: "100%",
-              height: "110px",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src={thumbnail}
-              alt="thumbnail"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderRadius: "10px",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                fontSize: "26px",
-                color: "#fff",
-              }}
-            >
-              ▶
-            </div>
-          </div>
-        )}
+
         <div
           style={{
-            marginTop: "6px",
+            marginTop: "auto",
             display: "flex",
-            flexWrap: "wrap",
+            flexDirection: "column",
             gap: "4px",
-            marginBottom: "2px",
           }}
         >
-          {occurrences.map((o, i) => (
-            <button
-              key={i}
-              onClick={() => setSelectedIndex(i)}
+          {selected.videoId && (
+            <div
+              onClick={() => setShowModal(true)}
               style={{
-                fontSize: "11px",
-                padding: "2px 5px",
-                borderRadius: "10px",
-                border: "none",
                 cursor: "pointer",
-                backgroundColor:
-                  i === selectedIndex
-                    ? "#facc15"
-                    : darkMode
-                    ? "#a78bfa"
-                    : "#fbcfe8",
-                color: "#111",
+                position: "relative",
+                width: "100%",
+                height: "90px",
               }}
             >
-              {o.date}
-            </button>
-          ))}
+              <img
+                src={thumbnail}
+                alt="thumbnail"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "26px",
+                  color: "#fff",
+                }}
+              >
+                ▶
+              </div>
+            </div>
+          )}
+          <div
+            style={{
+              marginTop: "6px",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "4px",
+            }}
+          >
+            {occurrences.map((o, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedIndex(i)}
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 5px",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor:
+                    i === selectedIndex
+                      ? "#facc15"
+                      : darkMode
+                      ? "#a78bfa"
+                      : "#fbcfe8",
+                  color: "#111",
+                }}
+              >
+                {o.date}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
+
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -194,14 +202,6 @@ function SongCard({ song, darkMode, cardHeight }) {
   );
 }
 
-function normalizeString(str) {
-  return str
-    .toLowerCase()
-    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) =>
-      String.fromCharCode(s.charCodeAt(0) - 0xfee0)
-    );
-}
-
 export default function Home() {
   const [songs, setSongs] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
@@ -210,8 +210,6 @@ export default function Home() {
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
   const [cols, setCols] = useState(3);
-  const [cardHeight, setCardHeight] = useState(0);
-  const cardRefs = useRef([]);
 
   const PAGE_SIZE = 30;
 
@@ -283,19 +281,13 @@ export default function Home() {
   const filtered = groupedSongs
     .filter(
       (s) =>
-        normalizeString(s.title).includes(normalizeString(search)) ||
-        normalizeString(s.artist).includes(normalizeString(search))
+        s.title.toLowerCase().replace(/[\u3000]/g, " ").includes(search.toLowerCase().replace(/[\u3000]/g, " ")) ||
+        s.artist.toLowerCase().replace(/[\u3000]/g, " ").includes(search.toLowerCase().replace(/[\u3000]/g, " "))
     )
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  useEffect(() => {
-    const heights = cardRefs.current.map((el) => el?.offsetHeight || 0);
-    const maxHeight = Math.max(...heights, 0);
-    setCardHeight(maxHeight);
-  }, [pageData, darkMode]);
 
   return (
     <main
@@ -403,10 +395,12 @@ export default function Home() {
           gap: "18px",
         }}
       >
-        {pageData.map((song, i) => (
-          <div ref={(el) => (cardRefs.current[i] = el)} key={song.title + song.artist}>
-            <SongCard song={song} darkMode={darkMode} cardHeight={cardHeight} />
-          </div>
+        {pageData.map((song) => (
+          <SongCard
+            key={song.title + song.artist}
+            song={song}
+            darkMode={darkMode}
+          />
         ))}
       </div>
       <div
@@ -414,9 +408,8 @@ export default function Home() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "8px",
+          gap: "16px",
           marginTop: "24px",
-          flexWrap: "wrap",
         }}
       >
         <button
@@ -433,17 +426,9 @@ export default function Home() {
         >
           前のページ
         </button>
-        <select
-          value={page}
-          onChange={(e) => setPage(Number(e.target.value))}
-          style={{ padding: "6px", borderRadius: "8px" }}
-        >
-          {Array.from({ length: totalPages }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              {i + 1} ページ
-            </option>
-          ))}
-        </select>
+        <span style={{ color: "#fff" }}>
+          {page} / {totalPages}
+        </span>
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
