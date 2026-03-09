@@ -16,8 +16,9 @@ function SongCard({ song, darkMode }) {
     <>
       <div
         style={{
-          position: "relative",
-          padding: "10px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
           borderRadius: "16px",
           backgroundColor: darkMode
             ? "rgba(91,33,182,0.6)"
@@ -25,11 +26,10 @@ function SongCard({ song, darkMode }) {
           color: darkMode ? "#fff" : "#6b21a8",
           boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
           backdropFilter: "blur(12px)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
           overflow: "hidden",
+          padding: "10px",
           fontSize: "12px",
+          height: "320px",
         }}
       >
         <div>
@@ -47,52 +47,53 @@ function SongCard({ song, darkMode }) {
           <p
             style={{
               fontSize: "11px",
-              margin: "2px 0 6px 0",
+              margin: "2px 0",
               textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
             }}
           >
             {song.artist}
           </p>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "4px",
+              marginTop: "6px",
+            }}
+          >
+            {occurrences.map((o, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedIndex(i)}
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 5px",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor:
+                    i === selectedIndex
+                      ? "#facc15"
+                      : darkMode
+                      ? "#a78bfa"
+                      : "#fbcfe8",
+                  color: "#111",
+                }}
+              >
+                {o.date}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={{ flexGrow: 1 }}></div>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "4px",
-            marginBottom: "6px",
-          }}
-        >
-          {occurrences.map((o, i) => (
-            <button
-              key={i}
-              onClick={() => setSelectedIndex(i)}
-              style={{
-                fontSize: "11px",
-                padding: "2px 5px",
-                borderRadius: "10px",
-                border: "none",
-                cursor: "pointer",
-                backgroundColor:
-                  i === selectedIndex
-                    ? "#facc15"
-                    : darkMode
-                    ? "#a78bfa"
-                    : "#fbcfe8",
-                color: "#111",
-              }}
-            >
-              {o.date}
-            </button>
-          ))}
-        </div>
+
         {selected.videoId && (
           <div
             onClick={() => setShowModal(true)}
             style={{
+              marginTop: "6px",
               cursor: "pointer",
               position: "relative",
-              marginTop: "6px",
+              flexShrink: 0,
             }}
           >
             <img
@@ -100,7 +101,7 @@ function SongCard({ song, darkMode }) {
               alt="thumbnail"
               style={{
                 width: "100%",
-                height: "140px",
+                height: "160px",
                 objectFit: "cover",
                 borderRadius: "10px",
               }}
@@ -120,6 +121,7 @@ function SongCard({ song, darkMode }) {
           </div>
         )}
       </div>
+
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -188,7 +190,7 @@ export default function Home() {
   const [sortAZ, setSortAZ] = useState(false);
   const [dateDesc, setDateDesc] = useState(true);
   const [page, setPage] = useState(1);
-  const [cols, setCols] = useState(3);
+  const [cols, setCols] = useState(2);
 
   const PAGE_SIZE = 30;
 
@@ -260,8 +262,8 @@ export default function Home() {
   const filtered = groupedSongs
     .filter(
       (s) =>
-        s.title.toLowerCase().normalize("NFKC").includes(search.toLowerCase().normalize("NFKC")) ||
-        s.artist.toLowerCase().normalize("NFKC").includes(search.toLowerCase().normalize("NFKC"))
+        s.title.normalize("NFKC").toLowerCase().includes(search.normalize("NFKC").toLowerCase()) ||
+        s.artist.normalize("NFKC").toLowerCase().includes(search.normalize("NFKC").toLowerCase())
     )
     .sort((a, b) => (sortAZ ? a.title.localeCompare(b.title, "ja") : 0));
 
@@ -367,21 +369,19 @@ export default function Home() {
           </a>
         </div>
       </div>
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(auto-fit, minmax(180px, 1fr))`,
+          gridTemplateColumns: `repeat(${Math.min(cols, 6)}, 1fr)`,
           gap: "18px",
         }}
       >
         {pageData.map((song) => (
-          <SongCard
-            key={song.title + song.artist}
-            song={song}
-            darkMode={darkMode}
-          />
+          <SongCard key={song.title + song.artist} song={song} darkMode={darkMode} />
         ))}
       </div>
+
       <div
         style={{
           display: "flex",
@@ -406,6 +406,7 @@ export default function Home() {
         >
           前のページ
         </button>
+
         <select
           value={page}
           onChange={(e) => setPage(Number(e.target.value))}
@@ -413,15 +414,18 @@ export default function Home() {
             padding: "6px 12px",
             borderRadius: "12px",
             border: "none",
+            backgroundColor: "#fff",
+            color: "#d946ef",
             cursor: "pointer",
           }}
         >
-          {Array.from({ length: totalPages }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              {i + 1} / {totalPages}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <option key={p} value={p}>
+              {p}
             </option>
           ))}
         </select>
+
         <button
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
@@ -437,6 +441,7 @@ export default function Home() {
           次のページ
         </button>
       </div>
+
       <p style={{ textAlign: "center", marginTop: "16px", color: "#fff" }}>
         現在 {filtered.length} 曲表示中
       </p>
