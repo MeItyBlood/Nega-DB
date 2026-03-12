@@ -5,6 +5,16 @@ import { useState, useEffect } from "react";
 function SongCard({ song, darkMode }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const occurrences = song.occurrences || [];
   const selected = occurrences[selectedIndex] || occurrences[0] || {};
@@ -16,6 +26,7 @@ function SongCard({ song, darkMode }) {
     <>
       <div
         style={{
+          position: "relative", 
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -32,6 +43,22 @@ function SongCard({ song, darkMode }) {
           height: "320px",
         }}
       >
+        <img
+          src="/kyomu1.png"
+          alt="icon"
+          style={{
+            position: "absolute",
+            top: "6px",
+            right: "6px",
+            width: "28px",
+            height: "28px",
+            borderRadius: "6px",
+            objectFit: "cover",
+            pointerEvents: "none",
+            zIndex: 10,
+          }}
+        />
+
         <div>
           <h2
             style={{
@@ -53,6 +80,7 @@ function SongCard({ song, darkMode }) {
           >
             {song.artist}
           </p>
+
           <div
             style={{
               display: "flex",
@@ -101,11 +129,12 @@ function SongCard({ song, darkMode }) {
               alt="thumbnail"
               style={{
                 width: "100%",
-                height: "160px",
+                height: isMobile ? "120px" : "160px",
                 objectFit: "cover",
                 borderRadius: "10px",
               }}
             />
+
             <div
               style={{
                 position: "absolute",
